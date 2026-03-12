@@ -5,7 +5,7 @@
 }
 
 body {
-    background: #DEC0EE;
+    background: #f2d8ff;
     font-family: 'Courier New', monospace;
     display: flex;
     flex-direction: column;
@@ -16,12 +16,24 @@ body {
 } 
 
 h1 {
-    color: #000;
+    color: #c310ff;
     margin-bottom: 30px;
-    font-size: 55px;
-    letter-spacing: 1px;
-    font-family: "Bitcount Prop Double Ink", system-ui;
+    font-size: 100px;
+    font-optical-sizing: auto;
+    font-weight: 390;
+    font-variation-settings:
+    "slnt" 0,
+    "CRSV" 0,
+    "ELSH" 3,
+    "ELXP" 5;
+    font-style: normal;
+    letter-spacing: 3px;
+    /* font-family: "Bitcount Prop Double Ink", system-ui; */
+    font-family: "Bitcount Prop Double", system-ui;
+
 }
+
+
 
 h2 {
     color: #000;
@@ -49,7 +61,7 @@ main {
 }
 
 section {
-    background-color: rgb(251, 226, 253);
+    background-color: rgb(229, 200, 245);
     text-align: center;
     width: 100%;
     padding: 40px 20px;
@@ -146,8 +158,8 @@ p {
     font-size: 70px;
     line-height: 1.1;
     margin: 5px 0;
-    color: #2d1b3c;
-    text-shadow: 2px 2px 0 #f7e1a3;
+    color: #471075;
+    text-shadow: 3px 3px 0 #ffe8aa;
 }
 
 
@@ -155,7 +167,7 @@ p {
     color: #5e3b5e;
     font-size:20px;
     background-color:rgb(255, 246, 217);
-    border: 3px solid #5e3b5e;
+    border: 3px solid #471075;
     padding:1rem 3.5rem;
     border-radius:60px;
     margin-top:20px;
@@ -171,7 +183,6 @@ p {
     cursor:pointer;
     box-shadow: 0 8px 0 #5e3b5e;
 }
-
 
 @keyframes swing {
     0% { transform: rotate(-1deg); }
@@ -203,3 +214,4 @@ p {
     width: 160px;
     filter: drop-shadow(4px 6px 0 rgba(0,0,0,0.2));
 }
+
