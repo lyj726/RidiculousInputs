@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const startBtn = document.getElementById("click-button");
 
     startBtn.addEventListener("click", function(){
-        document.body.style.background = "#DEC0EE";  
+        document.body.style.background = "#f2d8ff";  
 
         overlay.style.opacity = "0";
         overlay.style.transition = "0.5s";
