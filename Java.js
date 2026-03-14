@@ -31,64 +31,68 @@ window.onload = function() {
     var barHalf = barLength / 2;     
     var barHeight = 6;             
     var ballRadius = 10;            
-    var centerX = containerWidth / 2;   
+    var centerX = containerWidth / 2;
     var centerY = containerHeight / 2;  
-    var limit = barHalf - ballRadius;   
+    var limit = barHalf - ballRadius;
 
     //physics Variables
-    var angle = 0;          
+    var angle = 0; //the current bar angle      
     var ballPos = 0;       
     var ballVel = 0;      
 
-    var g = 0.18;           
-    var friction = 0.97;  
-    var maxAngle = 0.5;   
+    var g = 0.18; //gravity to ground         
+    var friction = 0.97;  // friction ball with bar
+    var maxAngle = 0.5;   // 50 degree angle
 
     var targetAngle = 0;    
     var animationId = null;
 
     // Loading variables
-    var loadingProgress = 0;  
-    var targetTimeInSeconds = 15; 
-    var loadingSpeed = 100 / (targetTimeInSeconds * 60); 
-    var balanceThreshold = 20; 
-    var isComplete = false;    
+    var loadingProgress = 0;
+    var loadingSpeed = 0.5;  
+    var balanceThreshold = 20;
+    var isComplete = false;
 
+    //mouse
     function onMouseMove(e) {
-        var mouseX = e.clientX; 
-        var windowWidth = window.innerWidth; 
-        var normalized = (mouseX / windowWidth) * 2 - 1; 
-        targetAngle = normalized * maxAngle; 
+        var mouseX = e.clientX; //mouse in the window
+        var windowWidth = window.innerWidth; // window width position
+        var targetTimeInSeconds = 20;
+        var normalized = (mouseX / windowWidth) * 2 - 1;
+        targetAngle = normalized * maxAngle;
     }
 
     function resetBall() {
-        ballPos = 0;          
-        ballVel = 0;         
+        ballPos = 0;  
+        ballVel = 0;
         targetAngle = 0;    
         angle = 0;
-        bar.style.transform = 'translate(-50%, -50%) rotate(0rad)'; 
+        bar.style.transform = 'translate(-50%, -50%) rotate(0rad)';
         updateVisual();
     }
 
     function updateVisual() {
         bar.style.transform = 'translate(-50%, -50%) rotate(' + angle + 'rad)';
 
-        var offsetX = ballPos * Math.cos(angle); 
+        var offsetX = ballPos * Math.cos(angle); //calculating ball positon angle
         var offsetY = ballPos * Math.sin(angle);
         
+        //normal direction the ball attach on the bar
         var normalOffset = ballRadius + barHeight / 2; 
         var normX = -Math.sin(angle) * normalOffset;
         var normY = -Math.cos(angle) * normalOffset;   
 
+        //ball posisition
         var ballX = centerX + offsetX + normX;
         var ballY = centerY + offsetY + normY;
 
+        //x y axis of the ball
         ball.style.left = ballX + 'px';
         ball.style.top = ballY + 'px';
     }
 
     function updateLoading() {
-        if (isComplete) return; 
+        if (isComplete) return;
         
         if (Math.abs(ballPos) < balanceThreshold) {
             loadingProgress = Math.min(loadingProgress + loadingSpeed, 100);
@@ -96,35 +100,34 @@ window.onload = function() {
             loadingProgress = Math.max(loadingProgress - loadingSpeed, 0);
         }
         
+        // Update the progress bar
         progressFill.style.width = loadingProgress + '%';
         
+        // loading complete change color
         if (loadingProgress >= 100) {
             isComplete = true;
-            progressFill.style.backgroundColor = "#4CAF50"; 
-            
-            var message = document.createElement('div');
-            message.style.fontSize = "24px";
-            message.style.marginTop = "20px";
-            message.style.color = "#4CAF50";
-            document.querySelector('section').appendChild(message);
+            console.log("Loading complete!");
+            progressFill.style.backgroundColor = "#4CAF50";
         }
     }
 
+    //restarting when angle 50 degree
     function updatePhysics() {
         var now = performance.now(); 
-        angle = angle + (targetAngle - angle) * 0.9; 
+        angle = angle + (targetAngle - angle) * 0.9; //bar angle
 
+        //ball speed
         var acceleration = -g * Math.sin(angle);
-        ballVel = ballVel + acceleration; 
+        ballVel = ballVel + acceleration;
         ballVel = ballVel * friction; 
-        ballPos = ballPos + ballVel; 
+        ballPos = ballPos + ballVel;
 
         if (ballPos > limit || ballPos < -limit) {
             resetBall();
         }
 
         updateVisual();
-        updateLoading(); 
+        updateLoading();
         animationId = requestAnimationFrame(updatePhysics);
     }
 
@@ -138,5 +141,6 @@ window.onload = function() {
     if (animationId != null) {
         cancelAnimationFrame(animationId);
     }
-    animationId = requestAnimationFrame(updatePhysics); 
+    animationId = requestAnimationFrame(updatePhysics);
+    console.log('game initialized');
 };
