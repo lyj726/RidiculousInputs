@@ -103,7 +103,6 @@ window.onload = function() {
             progressFill.style.backgroundColor = "#4CAF50"; 
             
             var message = document.createElement('div');
-            message.textContent = "🎉 完成！ 🎉";
             message.style.fontSize = "24px";
             message.style.marginTop = "20px";
             message.style.color = "#4CAF50";
