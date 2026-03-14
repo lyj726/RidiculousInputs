@@ -53,6 +53,13 @@ window.onload = function() {
     var balanceThreshold = 20;
     var isComplete = false;
 
+    //loading time
+    var loadingProgress = 0;
+    var targetTimeInSeconds = 15;
+    var loadingSpeed = 100 / (targetTimeInSeconds * 60);
+    var balanceThreshold = 20; 
+    var isComplete = false;
+
     //mouse
     function onMouseMove(e) {
         var mouseX = e.clientX; //mouse in the window
