@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", function(){
-
+    //click start 
     const overlay = document.getElementById("start-overlay");
     const startBtn = document.getElementById("click-button");
-
+    //click function start
     startBtn.addEventListener("click", function(){
         document.body.style.background = "#f2d8ff";  
 
@@ -17,9 +17,8 @@ document.addEventListener("DOMContentLoaded", function(){
 
 });
 
-
+//balance ball 
 window.onload = function() {
-
 
     var bar = document.querySelector('.loading');    
     var ball = document.getElementById('ball');       
@@ -36,74 +35,47 @@ window.onload = function() {
     var centerY = containerHeight / 2;  
     var limit = barHalf - ballRadius;   
 
+    //physics Variables
     var angle = 0;          
     var ballPos = 0;       
     var ballVel = 0;      
 
-
     var g = 0.18;           
-    var friction = 0.97;    
-    var maxAngle = 0.5;     
-
+    var friction = 0.97;  
+    var maxAngle = 0.5;   
 
     var targetAngle = 0;    
     var animationId = null;
 
-    var totalTime = 10;            
-    var startTime = null;       
-    var timerActive = true;  
-
-
-    function resetTimer() {
-        startTime = performance.now(); 
-        timerActive = true;           
-        progressFill.style.width = '0%'; 
-    }
-
- 
-    function updateProgress(now) {
-        if (!timerActive) return; 
-
-        var elapsed = (now - startTime) / 1000; 
-        if (elapsed >= totalTime) {
-    
-            progressFill.style.width = '100%';
-           
-            timerActive = false; 
-        } else {
-            var percent = (elapsed / totalTime) * 100;
-            progressFill.style.width = percent + '%';
-        }
-    }
-
+    // Loading variables
+    var loadingProgress = 0;  
+    var targetTimeInSeconds = 15; 
+    var loadingSpeed = 100 / (targetTimeInSeconds * 60); 
+    var balanceThreshold = 20; 
+    var isComplete = false;    
 
     function onMouseMove(e) {
-        var mouseX = e.clientX;
-        var windowWidth = window.innerWidth;
-        var normalized = (mouseX / windowWidth) * 2 - 1;
-        targetAngle = normalized * maxAngle;
+        var mouseX = e.clientX; 
+        var windowWidth = window.innerWidth; 
+        var normalized = (mouseX / windowWidth) * 2 - 1; 
+        targetAngle = normalized * maxAngle; 
     }
-
-    
 
     function resetBall() {
-        ballPos = 0;        
-        ballVel = 0;        
+        ballPos = 0;          
+        ballVel = 0;         
         targetAngle = 0;    
         angle = 0;
-        bar.style.transform = 'translate(-50%, -50%) rotate(0rad)';
+        bar.style.transform = 'translate(-50%, -50%) rotate(0rad)'; 
         updateVisual();
-
-        resetTimer();
     }
-
 
     function updateVisual() {
         bar.style.transform = 'translate(-50%, -50%) rotate(' + angle + 'rad)';
 
-        var offsetX = ballPos * Math.cos(angle);
+        var offsetX = ballPos * Math.cos(angle); 
         var offsetY = ballPos * Math.sin(angle);
-
+        
         var normalOffset = ballRadius + barHeight / 2; 
         var normX = -Math.sin(angle) * normalOffset;
         var normY = -Math.cos(angle) * normalOffset;   
@@ -115,42 +87,57 @@ window.onload = function() {
         ball.style.top = ballY + 'px';
     }
 
+    function updateLoading() {
+        if (isComplete) return; 
+        
+        if (Math.abs(ballPos) < balanceThreshold) {
+            loadingProgress = Math.min(loadingProgress + loadingSpeed, 100);
+        } else {
+            loadingProgress = Math.max(loadingProgress - loadingSpeed, 0);
+        }
+        
+        progressFill.style.width = loadingProgress + '%';
+        
+        if (loadingProgress >= 100) {
+            isComplete = true;
+            progressFill.style.backgroundColor = "#4CAF50"; 
+            
+            var message = document.createElement('div');
+            message.textContent = "🎉 完成！ 🎉";
+            message.style.fontSize = "24px";
+            message.style.marginTop = "20px";
+            message.style.color = "#4CAF50";
+            document.querySelector('section').appendChild(message);
+        }
+    }
 
     function updatePhysics() {
         var now = performance.now(); 
- 
-        angle = angle + (targetAngle - angle) * 0.9;
-
+        angle = angle + (targetAngle - angle) * 0.9; 
 
         var acceleration = -g * Math.sin(angle);
-        ballVel = ballVel + acceleration;
-        ballVel = ballVel * friction;
-        ballPos = ballPos + ballVel;
-
+        ballVel = ballVel + acceleration; 
+        ballVel = ballVel * friction; 
+        ballPos = ballPos + ballVel; 
 
         if (ballPos > limit || ballPos < -limit) {
             resetBall();
         }
 
         updateVisual();
-        updateProgress(now);
+        updateLoading(); 
         animationId = requestAnimationFrame(updatePhysics);
     }
 
-   
     bar.style.top = '50%';
     bar.style.left = '50%';
     bar.style.transform = 'translate(-50%, -50%) rotate(0rad)';
 
     window.addEventListener('mousemove', onMouseMove);
-
     resetBall();
-
 
     if (animationId != null) {
         cancelAnimationFrame(animationId);
     }
-    animationId = requestAnimationFrame(updatePhysics);
-
-    console.log('game initialized');
+    animationId = requestAnimationFrame(updatePhysics); 
 };
